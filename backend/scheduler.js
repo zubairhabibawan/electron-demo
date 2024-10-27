@@ -9,23 +9,21 @@ const folderPath = path.join(__dirname, '..', 'data'); // Adjust the path as nee
 function checkForTodaysFiles() {
     const today = new Date().toISOString().split('T')[0];
     console.log(`Searching for files with today's date: ${today}`);
-
     fs.readdir(folderPath, (err, files) => {
-        if (err) {
-            process.send({ message: `No file Found` });
-        }
-
         files.forEach((file) => {
             if (file.includes(today)) {
-                console.log(`File found for today: ${file}`);
-                process.send({ message: `File found for today: ${file}` });
+                console.log(`file found : ${file}`);
+                process.send({ message: `Today's File found : ${file}` , fileFound : true });
+            }else{
+                process.send({ message: `${today} : Searching files` , fileFound : false  });
             }
         });
     });
 }
 
 // Run the file check every minute
-setInterval(checkForTodaysFiles, 60000); // 60000 ms = 1 minute
+setInterval(checkForTodaysFiles, 30000); // 300000 ms = 30 sec
 
 // Log when the scheduler starts
 console.log("File-checking scheduler started, monitoring folder:", folderPath);
+

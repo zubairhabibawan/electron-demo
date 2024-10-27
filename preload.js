@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
-    onFileFound: (callback) => ipcRenderer.on('file-found', (event, message) => callback(message)),
+    onFileScheduler: (callback) => ipcRenderer.on('file-scheduler', (event, data) => callback(data)),
 });

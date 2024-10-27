@@ -18,7 +18,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 // Create invoices table if not exists
-db.run(`CREATE TABLE IF NOT EXISTS invoices (invoice_no TEXT, amount REAL, date TEXT)`);
+db.run(`CREATE TABLE IF NOT EXISTS invoices (invoice_no TEXT, amount REAL, date TEXT , isSynced BOOLEAN DEFAULT 0)`);
 
 // API to create a bill
 app.post('/api/bill', (req, res) => {
@@ -32,6 +32,27 @@ app.post('/api/bill', (req, res) => {
         }
     );
 });
+// API to get a unsynced-invoices
+app.get('/api/unsynced-invoices', (req, res) => {
+    db.all(`SELECT * FROM invoices WHERE isSynced = 0`, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json(rows);
+    });
+});
+
+app.put('/api/mark-synced/:invoice_no', (req, res) => {
+    const { invoice_no } = req.params;
+    console.log(`Marking invoice ${invoice_no} as synced`); // Add this log
+    db.run(`UPDATE invoices SET isSynced = 1 WHERE invoice_no = ?`, [invoice_no], function(err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ message: "Invoice marked as synced", invoice_no });
+    });
+});
+
 
 // API to get a specific invoice by invoice_no
 app.get('/api/bill/:invoice_no', (req, res) => {

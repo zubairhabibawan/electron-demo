@@ -18,7 +18,8 @@ db.serialize(() => {
         `CREATE TABLE IF NOT EXISTS invoices (
        invoice_no TEXT PRIMARY KEY,
        amount REAL,
-       date TEXT
+       date TEXT ,
+       isSynced BOOLEAN DEFAULT 0
      )`,
         (err) => {
             if (err) {
@@ -30,12 +31,12 @@ db.serialize(() => {
     );
 
     // Insert dummy data into invoices table
-    const insert = `INSERT INTO invoices (invoice_no, amount, date) VALUES (?, ?, ?)`;
-    db.run(insert, ["INV001", 100.50, "2024-10-01"]);
-    db.run(insert, ["INV002", 250.75, "2024-10-15"]);
-    db.run(insert, ["INV003", 180.20, "2024-10-20"]);
-    db.run(insert, ["INV004", 300.00, "2024-10-25"]);
-    db.run(insert, ["INV005", 125.50, "2024-10-26"]);
+    const insert = `INSERT INTO invoices (invoice_no, amount, date,isSynced) VALUES (?, ?, ?,?)`;
+    db.run(insert, ["1", 100.50, "2024-10-01",0]);
+    db.run(insert, ["2", 250.75, "2024-10-15",0]);
+    db.run(insert, ["3", 180.20, "2024-10-20",0]);
+    db.run(insert, ["4", 300.00, "2024-10-25",0]);
+    db.run(insert, ["5", 125.50, "2024-10-26",0]);
 
     console.log("Inserted dummy data into invoices table.");
 });
